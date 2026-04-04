@@ -1,0 +1,261 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 自定义样式 */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-sans antialiased;
+  }
+}
+
+@layer components {
+  /* 卡片样式 */
+  .card {
+    @apply rounded-lg shadow-sm border p-6 transition-all duration-200;
+    @apply bg-white border-gray-200;
+  }
+
+  .dark .card {
+    @apply bg-gray-800 border-gray-700;
+  }
+
+  .card:hover {
+    @apply shadow-md;
+  }
+
+  /* 链接样式 */
+  .link {
+    @apply text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 hover:underline transition-colors;
+  }
+
+  /* 标签样式 */
+  .tag {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    @apply bg-blue-100 text-blue-700;
+  }
+
+  .dark .tag {
+    @apply bg-blue-900/50 text-blue-300;
+  }
+
+  /* 按钮样式 */
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+  }
+
+  .btn-primary {
+    @apply bg-blue-500 text-white hover:bg-blue-600 dark:bg-blue-500 dark:hover:bg-blue-600;
+  }
+
+  /* 容器 */
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
+
+/* ==================== 暗色模式全局优化 ==================== */
+
+/* 标题 - 暗色模式下使用更亮的白色 */
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6 {
+  color: #f9fafb !important;
+}
+
+/* 正文文本 - 使用更亮的灰色 */
+.dark p {
+  color: #e5e7eb !important;
+}
+
+.dark li {
+  color: #e5e7eb !important;
+}
+
+/* 链接 - 使用明亮的蓝色 */
+.dark a {
+  color: #60a5fa !important;
+}
+
+.dark a:hover {
+  color: #93c5fd !important;
+}
+
+/* 导航栏暗色模式 */
+.dark header {
+  background-color: rgba(17, 24, 39, 0.95) !important;
+  border-bottom-color: #374151 !important;
+}
+
+.dark nav a {
+  color: #e5e7eb !important;
+}
+
+.dark nav a:hover {
+  color: #60a5fa !important;
+}
+
+.dark nav a.nav-active,
+.dark nav a.router-link-active {
+  color: #60a5fa !important;
+  background-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+/* 卡片标题 */
+.dark .card h1,
+.dark .card h2,
+.dark .card h3 {
+  color: #f9fafb !important;
+}
+
+/* 文章列表项 */
+.dark article h2 {
+  color: #f9fafb !important;
+}
+
+.dark article p {
+  color: #d1d5db !important;
+}
+
+/* 元信息（日期、阅读量等） */
+.dark .text-gray-500,
+.dark .text-gray-600 {
+  color: #9ca3af !important;
+}
+
+.dark .text-gray-400 {
+  color: #a1a1aa !important;
+}
+
+/* 表单输入框 */
+.dark input,
+.dark textarea {
+  color: #f3f4f6 !important;
+  background-color: #374151 !important;
+  border-color: #4b5563 !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #9ca3af !important;
+}
+
+.dark input:focus,
+.dark textarea:focus {
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.3) !important;
+  outline: none !important;
+}
+
+/* 评论区域 */
+.dark .bg-gray-50 {
+  background-color: #374151 !important;
+}
+
+.dark .bg-gray-100 {
+  background-color: #4b5563 !important;
+}
+
+/* 代码块 */
+.dark pre,
+.dark code {
+  background-color: #1f2937 !important;
+}
+
+/* 分页按钮 */
+.dark button:not(.bg-blue-500):not(.bg-red-500) {
+  color: #e5e7eb !important;
+}
+
+.dark button:disabled {
+  color: #6b7280 !important;
+}
+
+/* 侧边栏 */
+.dark aside h3 {
+  color: #f9fafb !important;
+}
+
+.dark aside a {
+  color: #d1d5db !important;
+}
+
+.dark aside a:hover {
+  color: #60a5fa !important;
+}
+
+/* 滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-600 rounded;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+/* 文章内容样式 */
+.article-content {
+  @apply prose dark:prose-invert max-w-none;
+}
+
+.article-content pre {
+  @apply bg-gray-100 dark:bg-gray-900 rounded-lg p-4 overflow-x-auto;
+}
+
+.article-content code {
+  @apply font-mono text-sm;
+}
+
+.article-content img {
+  @apply rounded-lg max-w-full h-auto;
+}
+
+.article-content a {
+  @apply text-blue-500 dark:text-blue-400 hover:underline;
+}
+
+.article-content blockquote {
+  @apply border-l-4 border-blue-500 pl-4 italic;
+  @apply text-gray-600;
+}
+
+.dark .article-content blockquote {
+  @apply text-gray-300;
+}
+
+/* 热门文章排名数字 */
+.dark .bg-primary-light,
+.dark .bg-primary-dark {
+  background-color: #3b82f6 !important;
+}
+
+/* 搜索图标 */
+.dark svg {
+  color: #9ca3af !important;
+}
+
+.dark button:hover svg {
+  color: #e5e7eb !important;
+}
+
+/* Footer */
+.dark footer {
+  background-color: #111827 !important;
+  border-top-color: #374151 !important;
+}
+
+.dark footer p {
+  color: #9ca3af !important;
+}
