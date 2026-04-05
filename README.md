@@ -2,6 +2,18 @@
 
 一个采用前后端分离架构的现代化个人博客系统，支持文章管理、评论互动、访问统计等功能。
 
+## 项目前台
+<img width="1512" height="824" alt="image" src="https://github.com/user-attachments/assets/a2b60041-1b86-4aca-8e88-77a612d62552" />
+<img width="1512" height="824" alt="image" src="https://github.com/user-attachments/assets/10e29dcb-f028-472a-8769-01a878325ad9" />
+支持明亮和暗夜两种风格的切换
+<img width="1512" height="824" alt="image" src="https://github.com/user-attachments/assets/920972f6-17ed-4661-88e7-f5b3694d653c" />
+
+## 项目后台
+<img width="1512" height="824" alt="image" src="https://github.com/user-attachments/assets/e0bcdea9-522a-4665-a17a-eb90a3afd756" />
+<img width="1512" height="824" alt="image" src="https://github.com/user-attachments/assets/2a23c4fb-9a67-4189-a9cf-023809233366" />
+<img width="1512" height="824" alt="image" src="https://github.com/user-attachments/assets/5761efc4-5da4-4afd-8d3d-69fdac872be0" />
+
+
 ## 项目结构
 
 ```
