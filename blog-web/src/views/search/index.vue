@@ -1,69 +1,99 @@
 <template>
-  <div class="container-custom">
-    <div class="max-w-2xl mx-auto">
-      <!-- 搜索框 -->
-      <div class="card mb-6">
-        <div class="relative">
-          <input
-            v-model="keyword"
-            type="text"
-            placeholder="搜索文章..."
-            class="w-full px-4 py-3 pr-12 rounded-lg border border-border-light dark:border-border-dark bg-transparent focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary-dark"
-            @keyup.enter="search"
-          />
-          <button
-            @click="search"
-            class="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- 搜索结果 -->
-      <div v-if="searched">
-        <p class="text-gray-600 dark:text-gray-400 mb-4">
-          找到 {{ total }} 篇与 "{{ lastKeyword }}" 相关的文章
-        </p>
-
-        <div v-if="loading" class="space-y-6">
-          <div v-for="i in 3" :key="i" class="card animate-pulse">
-            <div class="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-4"></div>
-            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full mb-2"></div>
-          </div>
-        </div>
-
-        <div v-else class="space-y-6">
-          <article v-for="article in articles" :key="article.id" class="card group cursor-pointer" @click="goToArticle(article.id)">
-            <div class="flex items-center gap-2 mb-3 text-sm text-gray-500 dark:text-gray-400">
-              <span>{{ formatDate(article.createTime) }}</span>
-              <span>·</span>
-              <span>{{ article.viewCount }} 阅读</span>
+  <div>
+    <!-- Search Header -->
+    <section class="relative overflow-hidden py-16 md:py-24">
+      <div class="absolute inset-0 grid-lines opacity-30"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[var(--color-bg)]"></div>
+      <div class="container-blog relative">
+        <div class="max-w-2xl mx-auto">
+          <!-- Search Input -->
+          <div class="relative animate-fade-in-up">
+            <div class="relative group">
+              <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--color-text-tertiary)] group-focus-within:text-[var(--color-accent)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                v-model="keyword"
+                type="text"
+                placeholder="搜索文章标题、摘要..."
+                class="w-full pl-12 pr-28 py-4 rounded-2xl bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] focus:outline-none focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent-glow)] transition-all duration-300 text-base font-body"
+                @keyup.enter="search"
+              />
+              <button
+                @click="search"
+                class="absolute right-2 top-1/2 -translate-y-1/2 px-5 py-2 rounded-xl bg-[var(--color-accent)] text-white text-sm font-medium hover:opacity-90 transition-all duration-300 shadow-glow"
+              >
+                搜索
+              </button>
             </div>
+          </div>
 
-            <h2 class="text-xl font-semibold mb-2 group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors">
-              {{ article.title }}
-            </h2>
+          <!-- Search hint -->
+          <p v-if="searched && !loading" class="text-sm text-[var(--color-text-tertiary)] mt-4 text-center animate-fade-in">
+            找到 <span class="text-[var(--color-accent)] font-mono font-semibold">{{ total }}</span> 篇与 "<span class="text-[var(--color-text-secondary)]">{{ lastKeyword }}</span>" 相关的文章
+          </p>
+        </div>
+      </div>
+    </section>
 
-            <p class="text-gray-600 dark:text-gray-400 line-clamp-2">{{ article.summary || '暂无摘要' }}</p>
-          </article>
+    <!-- Results -->
+    <section class="pb-20">
+      <div class="container-blog">
+        <div class="max-w-2xl mx-auto">
+          <!-- Loading -->
+          <div v-if="loading" class="space-y-5">
+            <div v-for="i in 3" :key="i" class="card">
+              <div class="skeleton h-4 w-24 rounded-full mb-3"></div>
+              <div class="skeleton h-6 w-3/4 mb-2"></div>
+              <div class="skeleton h-4 w-full"></div>
+            </div>
+          </div>
 
-          <div v-if="articles.length === 0" class="card text-center py-12 text-gray-500">
-            未找到相关文章
+          <!-- Results -->
+          <div v-else-if="searched" class="space-y-4">
+            <article
+              v-for="(article, index) in articles"
+              :key="article.id"
+              class="card group cursor-pointer animate-fade-in-up"
+              :style="{ animationDelay: `${index * 0.05}s`, opacity: 0 }"
+              @click="goToArticle(article.id)"
+            >
+              <div class="flex items-center gap-2 mb-3">
+                <span class="text-xs font-mono text-[var(--color-text-tertiary)]">{{ formatDate(article.createTime) }}</span>
+                <span class="text-[var(--color-text-tertiary)] text-xs">&middot;</span>
+                <span class="text-xs text-[var(--color-text-tertiary)]">{{ article.viewCount }} 阅读</span>
+              </div>
+              <h2 class="text-lg font-display font-semibold text-[var(--color-text-primary)] mb-2 group-hover:text-[var(--color-accent)] transition-colors">
+                {{ article.title }}
+              </h2>
+              <p class="text-sm text-[var(--color-text-secondary)] line-clamp-2 leading-relaxed">
+                {{ article.summary || '暂无摘要' }}
+              </p>
+            </article>
+
+            <!-- No Results -->
+            <div v-if="articles.length === 0" class="text-center py-16">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mx-auto mb-4 text-[var(--color-text-tertiary)] opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p class="text-[var(--color-text-tertiary)] text-sm">没有找到相关文章</p>
+              <p class="text-[var(--color-text-tertiary)] text-xs mt-1">试试其他关键词？</p>
+            </div>
+          </div>
+
+          <!-- Initial State -->
+          <div v-else class="text-center py-20 animate-fade-in">
+            <div class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-[var(--color-accent-soft)] flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-9 h-9 text-[var(--color-accent)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <p class="text-[var(--color-text-secondary)] text-sm font-medium mb-1">搜索文章</p>
+            <p class="text-[var(--color-text-tertiary)] text-xs">输入关键词，探索感兴趣的内容</p>
           </div>
         </div>
       </div>
-
-      <!-- 搜索提示 -->
-      <div v-else class="card text-center py-12 text-gray-500">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <p>输入关键词搜索文章</p>
-      </div>
-    </div>
+    </section>
   </div>
 </template>
 
@@ -105,7 +135,6 @@ async function search() {
   loading.value = true
   lastKeyword.value = keyword.value
 
-  // 更新URL
   router.replace({ query: { q: keyword.value } })
 
   try {
@@ -113,7 +142,6 @@ async function search() {
       pageNum: 1,
       pageSize: 20
     })
-    // 简单的前端搜索过滤
     const k = keyword.value.toLowerCase()
     articles.value = res.data.list.filter((a: any) =>
       a.title.toLowerCase().includes(k) ||
